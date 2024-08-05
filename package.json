@@ -1,0 +1,57 @@
+{
+  "name": "gather-hub",
+  "version": "1.0.0",
+  "description": "Conveys a central place for event gathering.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/w-rahul/gather-hub.git"
+  },
+  "keywords": [
+    "\"Community",
+    "Events\"",
+    "\"Event",
+    "Management\"",
+    "\"Event",
+    "Finder\"",
+    "\"Local",
+    "Events\"",
+    "\"Event",
+    "Registration\"",
+    "\"Event",
+    "Organizer\"",
+    "\"Community",
+    "Engagement\"",
+    "\"Event",
+    "Discovery\"",
+    "\"Event",
+    "Planning\"",
+    "\"Social",
+    "Events\"",
+    "\"Event",
+    "Dashboard\"",
+    "\"Event",
+    "Listings\"",
+    "\"User",
+    "Registration\"",
+    "\"Event",
+    "Tracking\"",
+    "\"Event",
+    "Categories\""
+  ],
+  "author": "Rahul (w-rahul)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/w-rahul/gather-hub/issues"
+  },
+  "homepage": "https://github.com/w-rahul/gather-hub#readme",
+  "devDependencies": {
+    "prisma": "^5.17.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.17.0"
+  }
+}
