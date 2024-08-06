@@ -10,6 +10,9 @@ const prisma = new PrismaClient()
 const JWT_SECRET = process.env.JWT_SECRET as string
 dotenv.config();
 
+
+// Register-route
+
 const registerSchema = z.object({
     name : z.string(),
     email : z.string().email(),
@@ -65,13 +68,52 @@ catch (error) {
 
 })
 
+// Login-route
 
-
-authRouter.post("/login", (req,res)=>{
-    res.send({
-        mssg : "Hello from login"
-    })
+const loginSchema =  z.object({
+    email : z.string().email(),
+    password : z.string()
 })
+
+authRouter.post("/login", async (req,res)=>{
+    const body =  req.body
+
+    const {success} = loginSchema.safeParse(body)
+    if(!success){
+        return res.status(411).json({
+            message : "Invalid inputs"
+        })
+    }
+
+    const userExist = await prisma.user.findUnique({
+        where:{
+            email : body.email,
+            password : body.password
+        }
+    })
+
+    if(!userExist){
+        return res.status(411).json({
+            message : "User not found / incorrect password"
+        })
+    }
+try {
+    
+    const token = sign({id: userExist.id}, JWT_SECRET)
+    return res.status(200).json({
+        token
+    })
+
+} catch (error) {
+    console.error(error)
+    return res.status(500).json({
+        message : "Something is up with the server"
+    })   
+}
+
+})
+
+
 
 authRouter.get("/logout",(req,res)=>{
     res.send({

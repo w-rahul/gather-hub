@@ -22,6 +22,7 @@ exports.authRouter = express_1.default.Router();
 const prisma = new client_1.PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET;
 dotenv_1.default.config();
+// Register-route
 const registerSchema = zod_1.default.object({
     name: zod_1.default.string(),
     email: zod_1.default.string().email(),
@@ -69,11 +70,43 @@ exports.authRouter.post("/register", (req, res) => __awaiter(void 0, void 0, voi
         });
     }
 }));
-exports.authRouter.post("/login", (req, res) => {
-    res.send({
-        mssg: "Hello from login"
-    });
+// Login-route
+const loginSchema = zod_1.default.object({
+    email: zod_1.default.string().email(),
+    password: zod_1.default.string()
 });
+exports.authRouter.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const body = req.body;
+    const { success } = loginSchema.safeParse(body);
+    if (!success) {
+        return res.status(411).json({
+            message: "Invalid inputs"
+        });
+    }
+    const userExist = yield prisma.user.findUnique({
+        where: {
+            email: body.email,
+            password: body.password
+        }
+    });
+    if (!userExist) {
+        return res.status(411).json({
+            message: "User not found / incorrect password"
+        });
+    }
+    try {
+        const token = (0, jsonwebtoken_1.sign)({ id: userExist.id }, JWT_SECRET);
+        return res.status(200).json({
+            token
+        });
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "Something is up with the server"
+        });
+    }
+}));
 exports.authRouter.get("/logout", (req, res) => {
     res.send({
         mssg: "Auth router is working fine"
