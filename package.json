@@ -10,38 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/w-rahul/gather-hub.git"
   },
-  "keywords": [
-    "\"Community",
-    "Events\"",
-    "\"Event",
-    "Management\"",
-    "\"Event",
-    "Finder\"",
-    "\"Local",
-    "Events\"",
-    "\"Event",
-    "Registration\"",
-    "\"Event",
-    "Organizer\"",
-    "\"Community",
-    "Engagement\"",
-    "\"Event",
-    "Discovery\"",
-    "\"Event",
-    "Planning\"",
-    "\"Social",
-    "Events\"",
-    "\"Event",
-    "Dashboard\"",
-    "\"Event",
-    "Listings\"",
-    "\"User",
-    "Registration\"",
-    "\"Event",
-    "Tracking\"",
-    "\"Event",
-    "Categories\""
-  ],
+  "keywords": [],
   "author": "Rahul (w-rahul)",
   "license": "ISC",
   "bugs": {
@@ -49,9 +18,15 @@
   },
   "homepage": "https://github.com/w-rahul/gather-hub#readme",
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "prisma": "^5.17.0"
   },
   "dependencies": {
-    "@prisma/client": "^5.17.0"
+    "@prisma/client": "^5.17.0",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.6",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2"
   }
 }
