@@ -16,9 +16,9 @@ enum Role{
 model User{
   id String @id @default(uuid())
   name String
-  email String
+  email String @unique
   password String
-  role Role
+  role Role @default(VIEWER)
   events Event[] @relation("ORGANIZER")
   registrations Registrations[] 
 }
