@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userRouter = void 0;
 const express_1 = __importDefault(require("express"));
 const client_1 = require("@prisma/client");
+const zod_1 = require("zod");
 const prisma = new client_1.PrismaClient();
 // const JWT_SECRET = process.env.JWT_SECRET as string
 // dotenv.config();
@@ -57,8 +58,46 @@ exports.userRouter.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, f
         });
     }
 }));
-exports.userRouter.put("/:id", (req, res) => {
+const UserUpdateSchema = zod_1.z.object({
+    name: zod_1.z.string().optional(),
+    email: zod_1.z.string().email().optional(),
+    password: zod_1.z.string().min(6).optional(),
+    role: zod_1.z.enum(["ORGANIZER", "VIEWER"]).optional()
 });
+exports.userRouter.put("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const body = req.body;
+    const userID = req.params.id;
+    const success = UserUpdateSchema.safeParse(body);
+    if (!success.success) {
+        console.log(success.error.errors);
+        return res.status(411).json({
+            message: "Invalid inputs"
+        });
+    }
+    try {
+        const updatedUser = yield prisma.user.update({
+            where: {
+                id: userID
+            },
+            data: {
+                name: body.name,
+                email: body.email,
+                password: body.password,
+                role: body.role,
+            }
+        });
+        return res.status(200).json({
+            message: 'User updated successfully',
+            user: updatedUser,
+        });
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Error updating user"
+        });
+    }
+}));
 exports.userRouter.delete("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userID = req.params.id;
     try {
