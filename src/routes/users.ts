@@ -44,7 +44,7 @@ userRouter.get("/:id", async (req,res)=>{
     } catch (error) {
         console.log(error)
         return res.status(404).json({
-            message : "Somethingis up with our server"
+            message : "Something up with our server"
         })
     }
 })
@@ -53,6 +53,24 @@ userRouter.put("/:id", (req,res)=>{
 
 })
 
-userRouter.delete("/:id", (req,res)=>{
+userRouter.delete("/:id", async (req,res)=>{
+    const userID = req.params.id
+    try {
+        const userToDelete = await prisma.user.delete({
+            where:{
+                id : userID
+            }
+        }) 
 
+
+        return res.status(200).json({
+            message : "User deleted"
+        })
+
+    } catch (error) {
+        console.log(error)
+        return res.status(404).json({
+            message : "User not found"
+        })
+    }
 })

@@ -53,11 +53,28 @@ exports.userRouter.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, f
     catch (error) {
         console.log(error);
         return res.status(404).json({
-            message: "Somethingis up with our server"
+            message: "Something up with our server"
         });
     }
 }));
 exports.userRouter.put("/:id", (req, res) => {
 });
-exports.userRouter.delete("/:id", (req, res) => {
-});
+exports.userRouter.delete("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userID = req.params.id;
+    try {
+        const userToDelete = yield prisma.user.delete({
+            where: {
+                id: userID
+            }
+        });
+        return res.status(200).json({
+            message: "User deleted"
+        });
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(404).json({
+            message: "User not found"
+        });
+    }
+}));
