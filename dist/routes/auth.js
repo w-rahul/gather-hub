@@ -107,8 +107,3 @@ exports.authRouter.post("/login", (req, res) => __awaiter(void 0, void 0, void 0
         });
     }
 }));
-exports.authRouter.get("/logout", (req, res) => {
-    res.send({
-        mssg: "Auth router is working fine"
-    });
-});

@@ -112,11 +112,3 @@ try {
 }
 
 })
-
-
-
-authRouter.get("/logout",(req,res)=>{
-    res.send({
-        mssg: "Auth router is working fine"
-    })
-})
