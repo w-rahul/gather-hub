@@ -9,6 +9,7 @@ const prisma = new PrismaClient()
 
 export const userRouter = express.Router()
 
+// User GET route
 userRouter.get("/",authenticate, async (req,res)=>{
     try {
         const user = await prisma.user.findMany({})
@@ -25,6 +26,7 @@ userRouter.get("/",authenticate, async (req,res)=>{
     
 })
 
+// User GET-id route
 userRouter.get("/:id",authenticate, async (req,res)=>{
     const userID = req.params.id
     try {
@@ -50,6 +52,7 @@ userRouter.get("/:id",authenticate, async (req,res)=>{
     }
 })
 
+// User PUT route
 const UserUpdateSchema = z.object({
     name: z.string().optional(),
     email : z.string().email().optional(),
@@ -101,6 +104,7 @@ try {
       
 })
 
+// User DELETE route
 userRouter.delete("/:id",authenticate, async (req,res)=>{
     const userID = req.params.id
     const UserIdFromToken = req.user?.id

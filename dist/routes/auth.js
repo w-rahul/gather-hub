@@ -22,7 +22,7 @@ exports.authRouter = express_1.default.Router();
 const prisma = new client_1.PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET;
 dotenv_1.default.config();
-// Register-route
+// Auth Register-route
 const registerSchema = zod_1.default.object({
     name: zod_1.default.string(),
     email: zod_1.default.string().email(),
@@ -70,7 +70,7 @@ exports.authRouter.post("/register", (req, res) => __awaiter(void 0, void 0, voi
         });
     }
 }));
-// Login-route
+// Auth Login-route
 const loginSchema = zod_1.default.object({
     email: zod_1.default.string().email(),
     password: zod_1.default.string()

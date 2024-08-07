@@ -11,7 +11,7 @@ const JWT_SECRET = process.env.JWT_SECRET as string
 dotenv.config();
 
 
-// Register-route
+// Auth Register-route
 
 const registerSchema = z.object({
     name : z.string(),
@@ -68,7 +68,7 @@ catch (error) {
 
 })
 
-// Login-route
+// Auth Login-route
 
 const loginSchema =  z.object({
     email : z.string().email(),
@@ -112,3 +112,4 @@ try {
 }
 
 })
+    

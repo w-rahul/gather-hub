@@ -21,6 +21,7 @@ const prisma = new client_1.PrismaClient();
 // const JWT_SECRET = process.env.JWT_SECRET as string
 // dotenv.config();
 exports.userRouter = express_1.default.Router();
+// User GET route
 exports.userRouter.get("/", middleware_1.authenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = yield prisma.user.findMany({});
@@ -35,6 +36,7 @@ exports.userRouter.get("/", middleware_1.authenticate, (req, res) => __awaiter(v
         });
     }
 }));
+// User GET-id route
 exports.userRouter.get("/:id", middleware_1.authenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userID = req.params.id;
     try {
@@ -59,6 +61,7 @@ exports.userRouter.get("/:id", middleware_1.authenticate, (req, res) => __awaite
         });
     }
 }));
+// User PUT route
 const UserUpdateSchema = zod_1.z.object({
     name: zod_1.z.string().optional(),
     email: zod_1.z.string().email().optional(),
@@ -106,6 +109,7 @@ exports.userRouter.put("/:id", middleware_1.authenticate, (req, res) => __awaite
         });
     }
 }));
+// User DELETE route
 exports.userRouter.delete("/:id", middleware_1.authenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const userID = req.params.id;
