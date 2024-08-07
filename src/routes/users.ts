@@ -1,7 +1,7 @@
 import express from "express"
 import { PrismaClient } from "@prisma/client"
-import dotenv from "dotenv"
 import { z } from "zod"
+import { authenticate } from "../middleware"
 
 const prisma = new PrismaClient()
 // const JWT_SECRET = process.env.JWT_SECRET as string
@@ -9,7 +9,7 @@ const prisma = new PrismaClient()
 
 export const userRouter = express.Router()
 
-userRouter.get("/", async (req,res)=>{
+userRouter.get("/",authenticate, async (req,res)=>{
     try {
         const user = await prisma.user.findMany({})
         res.status(200).json({
@@ -25,7 +25,7 @@ userRouter.get("/", async (req,res)=>{
     
 })
 
-userRouter.get("/:id", async (req,res)=>{
+userRouter.get("/:id",authenticate, async (req,res)=>{
     const userID = req.params.id
     try {
         const user = await prisma.user.findUnique({
@@ -57,9 +57,17 @@ const UserUpdateSchema = z.object({
     role : z.enum(["ORGANIZER", "VIEWER"]).optional()
 })
 
-userRouter.put("/:id", async (req,res)=>{
+userRouter.put("/:id",authenticate, async (req,res)=>{
     const body = req.body
     const userID = req.params.id
+    const UserIdFromToken = req.user?.id
+
+    if(userID !== UserIdFromToken){
+        return res.status(403).json({
+            message : "You are not allow to alter another user's detailes"
+        })
+    }
+
     const success = UserUpdateSchema.safeParse(body)
     if(!success.success){
         console.log(success.error.errors)
@@ -93,8 +101,16 @@ try {
       
 })
 
-userRouter.delete("/:id", async (req,res)=>{
+userRouter.delete("/:id",authenticate, async (req,res)=>{
     const userID = req.params.id
+    const UserIdFromToken = req.user?.id
+
+    if(userID !== UserIdFromToken){
+        return res.status(403).json({
+            message : "You are not allow to alter another user's detailes"
+        })
+    }
+
     try {
         const userToDelete = await prisma.user.delete({
             where:{

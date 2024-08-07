@@ -16,11 +16,12 @@ exports.userRouter = void 0;
 const express_1 = __importDefault(require("express"));
 const client_1 = require("@prisma/client");
 const zod_1 = require("zod");
+const middleware_1 = require("../middleware");
 const prisma = new client_1.PrismaClient();
 // const JWT_SECRET = process.env.JWT_SECRET as string
 // dotenv.config();
 exports.userRouter = express_1.default.Router();
-exports.userRouter.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.userRouter.get("/", middleware_1.authenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = yield prisma.user.findMany({});
         res.status(200).json({
@@ -34,7 +35,7 @@ exports.userRouter.get("/", (req, res) => __awaiter(void 0, void 0, void 0, func
         });
     }
 }));
-exports.userRouter.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.userRouter.get("/:id", middleware_1.authenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userID = req.params.id;
     try {
         const user = yield prisma.user.findUnique({
@@ -64,9 +65,16 @@ const UserUpdateSchema = zod_1.z.object({
     password: zod_1.z.string().min(6).optional(),
     role: zod_1.z.enum(["ORGANIZER", "VIEWER"]).optional()
 });
-exports.userRouter.put("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.userRouter.put("/:id", middleware_1.authenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const body = req.body;
     const userID = req.params.id;
+    const UserIdFromToken = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
+    if (userID !== UserIdFromToken) {
+        return res.status(403).json({
+            message: "You are not allow to alter another user's detailes"
+        });
+    }
     const success = UserUpdateSchema.safeParse(body);
     if (!success.success) {
         console.log(success.error.errors);
@@ -98,8 +106,15 @@ exports.userRouter.put("/:id", (req, res) => __awaiter(void 0, void 0, void 0, f
         });
     }
 }));
-exports.userRouter.delete("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.userRouter.delete("/:id", middleware_1.authenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const userID = req.params.id;
+    const UserIdFromToken = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
+    if (userID !== UserIdFromToken) {
+        return res.status(403).json({
+            message: "You are not allow to alter another user's detailes"
+        });
+    }
     try {
         const userToDelete = yield prisma.user.delete({
             where: {
