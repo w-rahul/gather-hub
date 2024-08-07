@@ -38,8 +38,8 @@ model Event{
 
 model Registrations{
   id String @id @default(uuid())
-  userID String
-  eventID String
+  userID String @unique
+  eventID String @unique
   registeredAT DateTime @default(now())
   user User @relation(fields: [userID], references: [id])
   event Event @relation(fields: [eventID], references: [id])
