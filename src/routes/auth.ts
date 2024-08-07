@@ -53,7 +53,7 @@ try {
         }
     })
 
-    const token = sign({id : user.id}, JWT_SECRET)
+    const token = sign({id : user.id, role: user.role}, JWT_SECRET)
     return res.status(200).json({
         message : "User Created successfuly",
         token
@@ -99,7 +99,7 @@ authRouter.post("/login", async (req,res)=>{
     }
 try {
     
-    const token = sign({id: userExist.id}, JWT_SECRET)
+    const token = sign({id: userExist.id, role: userExist.role}, JWT_SECRET)
     return res.status(200).json({
         token
     })

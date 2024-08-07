@@ -44,8 +44,10 @@ export const authorizeOrganizer = (req: Request, res: Response , next: NextFunct
             next()
         }
         else{
+            console.log(req.user?.role)
             return res.status(403).json({
-                message : "You are not authorized to acces this role"
+                message : "You are not authorized to access this role",
+                role : req.user?.role
             })
         }
 

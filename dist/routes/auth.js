@@ -57,7 +57,7 @@ exports.authRouter.post("/register", (req, res) => __awaiter(void 0, void 0, voi
                 role: body.role
             }
         });
-        const token = (0, jsonwebtoken_1.sign)({ id: user.id }, JWT_SECRET);
+        const token = (0, jsonwebtoken_1.sign)({ id: user.id, role: user.role }, JWT_SECRET);
         return res.status(200).json({
             message: "User Created successfuly",
             token
@@ -95,7 +95,7 @@ exports.authRouter.post("/login", (req, res) => __awaiter(void 0, void 0, void 0
         });
     }
     try {
-        const token = (0, jsonwebtoken_1.sign)({ id: userExist.id }, JWT_SECRET);
+        const token = (0, jsonwebtoken_1.sign)({ id: userExist.id, role: userExist.role }, JWT_SECRET);
         return res.status(200).json({
             token
         });

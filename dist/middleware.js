@@ -35,13 +35,16 @@ const authenticate = (req, res, next) => {
 exports.authenticate = authenticate;
 // Organizer Authorization middleware
 const authorizeOrganizer = (req, res, next) => {
+    var _a, _b;
     try {
         if (req.user && req.user.role == "ORGANIZER") {
             next();
         }
         else {
+            console.log((_a = req.user) === null || _a === void 0 ? void 0 : _a.role);
             return res.status(403).json({
-                message: "You are not authorized to acces this role"
+                message: "You are not authorized to access this role",
+                role: (_b = req.user) === null || _b === void 0 ? void 0 : _b.role
             });
         }
     }
