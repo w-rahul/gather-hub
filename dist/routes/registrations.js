@@ -18,6 +18,7 @@ const middleware_1 = require("../middleware");
 const client_1 = require("@prisma/client");
 exports.registrationsRtouer = express_1.default.Router();
 const prisma = new client_1.PrismaClient;
+// Registraion POST-id route
 exports.registrationsRtouer.post("/:id", middleware_1.authenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
@@ -61,10 +62,82 @@ exports.registrationsRtouer.post("/:id", middleware_1.authenticate, (req, res) =
         });
     }
 }));
-// Admin only 
-exports.registrationsRtouer.get("/", (req, res) => {
-});
-exports.registrationsRtouer.get("/:id", (req, res) => {
-});
-exports.registrationsRtouer.delete("/:id", (req, res) => {
-});
+// Admin only
+//  Registraion GET route 
+exports.registrationsRtouer.get("/", middleware_1.authenticate, middleware_1.authorizeAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const Registrations = yield prisma.registrations.findMany({});
+        if (!Registrations) {
+            return res.status(404).json({
+                message: "No registration found"
+            });
+        }
+        return res.status(200).json({
+            Registrations
+        });
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Something is up with our server"
+        });
+    }
+}));
+// Registraion GET-id route
+exports.registrationsRtouer.get("/:id", middleware_1.authenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const RegistrationID = req.params.id;
+        const SpecificRegistration = yield prisma.registrations.findUnique({
+            where: {
+                id: RegistrationID
+            }
+        });
+        if (!SpecificRegistration) {
+            return res.status(404).json({
+                message: "No registration found"
+            });
+        }
+        return res.status(200).json({
+            SpecificRegistration
+        });
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Something is up with our server"
+        });
+    }
+}));
+// Registraion DELETE-id route
+exports.registrationsRtouer.delete("/:id", middleware_1.authenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const EventIDParams = req.params.id;
+    const UserIDfromToken = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
+    try {
+        const eventExists = yield prisma.event.findUnique({
+            where: {
+                id: EventIDParams
+            }
+        });
+        if (eventExists) {
+            return res.status(404).json({
+                message: "Event not found"
+            });
+        }
+        yield prisma.registrations.delete({
+            where: {
+                eventID: EventIDParams,
+                userID: UserIDfromToken
+            }
+        });
+        return res.status(200).json({
+            message: `Registration of ${UserIDfromToken} is successfully deleted for event ${EventIDParams}`
+        });
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Something is up with our server"
+        });
+    }
+}));
