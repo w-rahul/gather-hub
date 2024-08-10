@@ -18,6 +18,7 @@ const middleware_1 = require("../middleware");
 const client_1 = require("@prisma/client");
 exports.registrationsRtouer = express_1.default.Router();
 const prisma = new client_1.PrismaClient;
+//! Needs testing
 // Registraion POST-id route
 exports.registrationsRtouer.post("/:id", middleware_1.authenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;

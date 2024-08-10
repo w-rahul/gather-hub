@@ -15,7 +15,6 @@ const EventCreationSchema = z.object({
     title: z.string(),
     description: z.string().min(10),
     date: z.string(),
-    time: z.string(),
     location: z.string(),
     category: z.string()
 })
@@ -57,7 +56,6 @@ try {
             title: body.title,
             description: body.description,
             date: new Date(body.date),
-            time: new Date(body.time),
             location: body.location,
             category: body.category,
             organizerId : UserIdFromToken
@@ -83,7 +81,29 @@ try {
 eventRouter.get("/", authenticate, async (req,res)=>{
 
 try {
-    const AllEvents = await prisma.event.findMany({})
+    const AllEvents = await prisma.event.findMany({
+        select: {
+            title: true,
+            description: true,
+            date: true,
+            category: true,
+            location: true,
+            organizer: {
+                select: {
+                    name: true,
+                },
+            },
+            registrations:{
+                select: {
+                    user :{
+                        select:{
+                            name: true
+                        }
+                    }
+                }
+            }   
+        }
+    })
     return res.status(200).json({
         AllEvents
     })
@@ -164,7 +184,6 @@ try {
             title: body.title,
             description: body.description,
             date: new Date(body.date),
-            time: new Date(body.time),
             location: body.location,
             category: body.category,
             organizerId : UserIdFromToken
