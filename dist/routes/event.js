@@ -80,6 +80,7 @@ exports.eventRouter.get("/", middleware_1.authenticate, (req, res) => __awaiter(
     try {
         const AllEvents = yield prisma.event.findMany({
             select: {
+                id: true,
                 title: true,
                 description: true,
                 date: true,

@@ -83,6 +83,7 @@ eventRouter.get("/", authenticate, async (req,res)=>{
 try {
     const AllEvents = await prisma.event.findMany({
         select: {
+            id : true,
             title: true,
             description: true,
             date: true,
