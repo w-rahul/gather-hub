@@ -35,9 +35,28 @@ export const authenticate = (req : Request ,res: Response ,next: NextFunction) =
     }
 }
 
+//VIEWER middleware 
+
+export const authorizeVIEWER = (req: Request, res:Response, next:NextFunction) =>{
+        try {
+            if(req.user && req.user.role == "VIEWER") next()
+                else{
+                    return res.status(403).json({
+                        message : "This action is for Viewers only"
+                    })
+                }
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({
+                message : "Something is up with our server right now!"
+            })
+        }
+}
+
+
 // Organizer Authorization middleware
 
-export const authorizeOrganizer = (req: Request, res: Response , next: NextFunction) =>{
+export const authorizeOrganizer= (req: Request, res: Response , next: NextFunction) =>{
     try {
 
         if(req.user && req.user.role == "ORGANIZER"){
