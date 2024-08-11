@@ -120,6 +120,28 @@ exports.eventRouter.get("/:id", middleware_1.authenticate, (req, res) => __await
         const SpecificEvent = yield prisma.event.findUnique({
             where: {
                 id: EventID
+            },
+            select: {
+                id: true,
+                title: true,
+                description: true,
+                date: true,
+                category: true,
+                location: true,
+                organizer: {
+                    select: {
+                        name: true,
+                    },
+                },
+                registrations: {
+                    select: {
+                        user: {
+                            select: {
+                                name: true
+                            }
+                        }
+                    }
+                }
             }
         });
         return res.status(200).json({

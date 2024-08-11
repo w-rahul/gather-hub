@@ -125,6 +125,28 @@ try {
     const SpecificEvent = await prisma.event.findUnique({
         where:{
             id : EventID
+        },
+        select: {
+            id : true,
+            title: true,
+            description: true,
+            date: true,
+            category: true,
+            location: true,
+            organizer: {
+                select: {
+                    name: true,
+                },
+            },
+            registrations:{
+                select: {
+                    user :{
+                        select:{
+                            name: true
+                        }
+                    }
+                }
+            }   
         }
     })
 
