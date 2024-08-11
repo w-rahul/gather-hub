@@ -6,7 +6,7 @@ export const registrationsRtouer = express.Router()
 
 const prisma = new PrismaClient
 
-//! Needs testing
+//! Need testing
 
 // Registraion POST-id route
 registrationsRtouer.post("/:id", authenticate,authorizeVIEWER, async (req,res)=>{
