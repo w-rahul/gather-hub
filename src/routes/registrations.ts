@@ -85,32 +85,35 @@ registrationsRtouer.get("/",authenticate, authorizeAdmin, async (req,res)=>{
 
 
 // Registraion GET-id route
-registrationsRtouer.get("/:id",authenticate, async (req,res)=>{
+registrationsRtouer.get("/:eventID/:userID", authenticate, async (req, res) => {
+    try {
+        const { eventID, userID } = req.params;
 
-try {
-    const RegistrationID = req.params.id
+        const SpecificRegistration = await prisma.registrations.findUnique({
+            where: {
+                    userID: userID,
+                    eventID: eventID
+                
+            }
+        });
 
-    const SpecificRegistration = await prisma.registrations.findUnique({
-        where:{
-            id : RegistrationID
+        if (SpecificRegistration) {
+            return res.status(200).json({
+                registered: true
+            });
         }
-    })
-    if(!SpecificRegistration){
-        return res.status(404).json({
-            message : "No registration found"
-        })
-    }
 
-    return res.status(200).json({
-        SpecificRegistration
-    })
-} catch (error) {
-    console.log(error)  
-    return res.status(500).json({
-        message : "Something is up with our server"
-    })
-}
-})
+        return res.status(200).json({
+            registered: false
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Something is up with our server"
+        });
+    }
+});
+
 
 
 // Registraion DELETE-id route
