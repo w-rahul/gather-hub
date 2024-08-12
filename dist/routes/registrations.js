@@ -18,9 +18,9 @@ const middleware_1 = require("../middleware");
 const client_1 = require("@prisma/client");
 exports.registrationsRtouer = express_1.default.Router();
 const prisma = new client_1.PrismaClient;
-//! Needs testing
+//! Need testing
 // Registraion POST-id route
-exports.registrationsRtouer.post("/:id", middleware_1.authenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.registrationsRtouer.post("/:id", middleware_1.authenticate, middleware_1.authorizeVIEWER, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
         const UserIDfromToken = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
@@ -85,21 +85,22 @@ exports.registrationsRtouer.get("/", middleware_1.authenticate, middleware_1.aut
     }
 }));
 // Registraion GET-id route
-exports.registrationsRtouer.get("/:id", middleware_1.authenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.registrationsRtouer.get("/:eventID/:userID", middleware_1.authenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const RegistrationID = req.params.id;
+        const { eventID, userID } = req.params;
         const SpecificRegistration = yield prisma.registrations.findUnique({
             where: {
-                id: RegistrationID
+                userID: userID,
+                eventID: eventID
             }
         });
-        if (!SpecificRegistration) {
-            return res.status(404).json({
-                message: "No registration found"
+        if (SpecificRegistration) {
+            return res.status(200).json({
+                registered: true
             });
         }
         return res.status(200).json({
-            SpecificRegistration
+            registered: false
         });
     }
     catch (error) {
@@ -110,7 +111,7 @@ exports.registrationsRtouer.get("/:id", middleware_1.authenticate, (req, res) =>
     }
 }));
 // Registraion DELETE-id route
-exports.registrationsRtouer.delete("/:id", middleware_1.authenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.registrationsRtouer.delete("/:id", middleware_1.authenticate, middleware_1.authorizeVIEWER, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const EventIDParams = req.params.id;
     const UserIDfromToken = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;

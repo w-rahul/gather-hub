@@ -54,7 +54,7 @@ exports.eventRouter.post("/", middleware_1.authenticate, middleware_1.authorizeO
                 message: "Event already exists!"
             });
         }
-        yield prisma.event.create({
+        const NewEvent = yield prisma.event.create({
             data: {
                 title: body.title,
                 description: body.description,
@@ -65,6 +65,7 @@ exports.eventRouter.post("/", middleware_1.authenticate, middleware_1.authorizeO
             }
         });
         return res.status(200).json({
+            id: NewEvent.id,
             message: "Event created successfuly"
         });
     }
@@ -213,9 +214,30 @@ exports.eventRouter.put("/:id", middleware_1.authenticate, middleware_1.authoriz
     }
 }));
 // Event DELETE route
-exports.eventRouter.delete("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.eventRouter.delete("/:id", middleware_1.authenticate, middleware_1.authorizeOrganizer, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
         const EventID = req.params.id;
+        const UserIdFromToken = (_a = req.user) === null || _a === void 0 ? void 0 : _a.id;
+        const event = yield prisma.event.findUnique({
+            where: {
+                id: EventID
+            },
+            select: {
+                organizerId: true
+            }
+        });
+        if (!event) {
+            return res.send(404).json({
+                message: "Event not found"
+            });
+        }
+        if (event.organizerId !== UserIdFromToken) {
+            console.log("hello hgellosdfksdofsdofkdsfoksfok");
+            return res.status(403).json({
+                message: "Forbidden: You can only delete your own events"
+            });
+        }
         yield prisma.event.delete({
             where: {
                 id: EventID
@@ -226,8 +248,7 @@ exports.eventRouter.delete("/:id", (req, res) => __awaiter(void 0, void 0, void 
         });
     }
     catch (error) {
-        console.log(error);
-        return res.status(500).json({
+        return res.status(403).json({
             message: "Something is up with our server"
         });
     }

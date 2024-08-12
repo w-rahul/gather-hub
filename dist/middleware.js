@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authorizeAdmin = exports.authorizeOrganizer = exports.authenticate = void 0;
+exports.authorizeAdmin = exports.authorizeOrganizer = exports.authorizeVIEWER = exports.authenticate = void 0;
 const jsonwebtoken_1 = require("jsonwebtoken");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
@@ -33,6 +33,25 @@ const authenticate = (req, res, next) => {
     }
 };
 exports.authenticate = authenticate;
+//VIEWER middleware 
+const authorizeVIEWER = (req, res, next) => {
+    try {
+        if (req.user && req.user.role == "VIEWER")
+            next();
+        else {
+            return res.status(403).json({
+                message: "This action is for Viewers only"
+            });
+        }
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Something is up with our server right now!"
+        });
+    }
+};
+exports.authorizeVIEWER = authorizeVIEWER;
 // Organizer Authorization middleware
 const authorizeOrganizer = (req, res, next) => {
     var _a, _b;
