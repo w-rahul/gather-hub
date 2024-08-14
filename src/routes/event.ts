@@ -252,7 +252,7 @@ try {
     }
 
     if (event.organizerId !== UserIdFromToken) {
-                console.log("hello hgellosdfksdofsdofkdsfoksfok")
+                console.log("Error - Forbidden")
         return res.status(403).json({
             message: "Forbidden: You can only delete your own events"
         });
