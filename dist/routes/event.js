@@ -129,6 +129,7 @@ exports.eventRouter.get("/:id", middleware_1.authenticate, (req, res) => __await
                 date: true,
                 category: true,
                 location: true,
+                organizerId: true,
                 organizer: {
                     select: {
                         name: true,
@@ -233,7 +234,7 @@ exports.eventRouter.delete("/:id", middleware_1.authenticate, middleware_1.autho
             });
         }
         if (event.organizerId !== UserIdFromToken) {
-            console.log("hello hgellosdfksdofsdofkdsfoksfok");
+            console.log("Error - Forbidden");
             return res.status(403).json({
                 message: "Forbidden: You can only delete your own events"
             });
