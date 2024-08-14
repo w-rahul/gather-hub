@@ -37,8 +37,10 @@ exports.registrationsRtouer.post("/:id", middleware_1.authenticate, middleware_1
         }
         const ExistRegistration = yield prisma.registrations.findUnique({
             where: {
-                userID: UserIDfromToken,
-                eventID: EventIDfromParams
+                userID_eventID: {
+                    userID: UserIDfromToken,
+                    eventID: EventIDfromParams
+                }
             }
         });
         if (ExistRegistration) {
@@ -90,8 +92,10 @@ exports.registrationsRtouer.get("/:eventID/:userID", middleware_1.authenticate, 
         const { eventID, userID } = req.params;
         const SpecificRegistration = yield prisma.registrations.findUnique({
             where: {
-                userID: userID,
-                eventID: eventID
+                userID_eventID: {
+                    userID: userID,
+                    eventID: eventID
+                }
             }
         });
         if (SpecificRegistration) {
@@ -128,8 +132,10 @@ exports.registrationsRtouer.delete("/:id", middleware_1.authenticate, middleware
         }
         yield prisma.registrations.delete({
             where: {
-                eventID: EventIDParams,
-                userID: UserIDfromToken
+                userID_eventID: {
+                    userID: UserIDfromToken,
+                    eventID: EventIDParams
+                }
             }
         });
         return res.status(200).json({
