@@ -29,8 +29,10 @@ try {
 
      const ExistRegistration = await prisma.registrations.findUnique({
         where:{
-            userID : UserIDfromToken,
-            eventID : EventIDfromParams
+            userID_eventID: {
+                userID :UserIDfromToken,
+                eventID : EventIDfromParams
+            }
         }
     })
 
@@ -91,9 +93,10 @@ registrationsRtouer.get("/:eventID/:userID", authenticate, async (req, res) => {
 
         const SpecificRegistration = await prisma.registrations.findUnique({
             where: {
-                    userID: userID,
-                    eventID: eventID
-                
+                userID_eventID: {
+                    userID : userID,
+                    eventID : eventID
+                }                
             }
         });
 
@@ -137,8 +140,10 @@ try {
 
     await prisma.registrations.delete({
         where:{
-            eventID : EventIDParams,
-            userID : UserIDfromToken
+            userID_eventID: {
+                userID :UserIDfromToken,
+                eventID : EventIDParams
+            }
         }
     })
 
