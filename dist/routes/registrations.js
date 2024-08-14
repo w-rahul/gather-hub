@@ -67,9 +67,21 @@ exports.registrationsRtouer.post("/:id", middleware_1.authenticate, middleware_1
 }));
 // Admin only
 //  Registraion GET route 
-exports.registrationsRtouer.get("/", middleware_1.authenticate, middleware_1.authorizeAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.registrationsRtouer.get("/:id", middleware_1.authenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const EventID = req.params.id;
     try {
-        const Registrations = yield prisma.registrations.findMany({});
+        const Registrations = yield prisma.registrations.findMany({
+            where: {
+                eventID: EventID
+            },
+            select: {
+                user: {
+                    select: {
+                        name: true
+                    }
+                }
+            }
+        });
         if (!Registrations) {
             return res.status(404).json({
                 message: "No registration found"

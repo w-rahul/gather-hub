@@ -63,10 +63,23 @@ try {
 
 // Admin only
 //  Registraion GET route 
-registrationsRtouer.get("/",authenticate, authorizeAdmin, async (req,res)=>{
+registrationsRtouer.get("/:id",authenticate, async (req,res)=>{
+
+    const EventID = req.params.id
 
     try {
-        const Registrations = await prisma.registrations.findMany({})
+        const Registrations = await prisma.registrations.findMany({
+            where:{
+                eventID : EventID 
+            },
+            select:{
+                user:{
+                    select:{
+                        name: true
+                    }
+                }
+            }
+        })
     if(!Registrations){
         return res.status(404).json({
             message : "No registration found"
