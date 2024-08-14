@@ -134,6 +134,7 @@ try {
             date: true,
             category: true,
             location: true,
+            organizerId : true,
             organizer: {
                 select: {
                     name: true,
