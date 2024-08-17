@@ -28,7 +28,7 @@ try {
     const payload = EventCreationSchema.safeParse(body)
         if(!payload.success){
             console.error(payload.error.errors)
-            return res.status(400).json({
+            return res.status(411).json({
                 message : "Invalid Inputs"
             })
         }
