@@ -37,3 +37,6 @@ Welcome to the backend of the GatherHub project, a community event management ap
 - **DELETE /registrations/:id**: Unregister a user from an event.
 - **GET /registrations/:id**: Retrieve registration details by ID.
 
+
+## Live link 
+** https://rxhxul-gatherhub.vercel.app/login
